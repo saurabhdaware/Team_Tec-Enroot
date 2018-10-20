@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    </head>
     <body>
         <video autoplay></video>
         <br>
@@ -8,8 +12,10 @@
         <br>
         <canvas id="myCanvas" width="400" height="350"></canvas>  
         <script>
+        const node_server = 'https://smart-traffic-signal.herokuapp.com';
+
         const constraints = {
-            video: {
+            video: (false)?true:{
                 facingMode:{exact:"environment"}
             }
         };
@@ -25,6 +31,28 @@
         function snapshot() {
             // Draws current image from the video element into the canvas
             ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+            let image64 = canvas.toDataURL('image/jpeg',1.0);
+            let dataimage = dataURLtoFile(image64,'something.jpg');
+            uploadImage(dataimage);
+        }
+
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type:mime});
+        }
+
+        function uploadImage(data){
+            let formdata = new FormData();
+            formdata.append('dataImage',data)
+            axios.post(`${node_server}/upload`,formdata,{
+                headers:{
+                    'Content-Type':'multipart/form-data'
+                }
+            }).then(console.log)
         }
         </script>
     </body>
