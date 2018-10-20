@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/saurabhdaware/Team_Tec-Enroot#readme",
   "dependencies": {
-    "johnny-five": "^1.0.0"
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "johnny-five": "^1.0.0",
+    "multer": "^1.4.1",
+    "pubnub": "^4.21.6"
   }
 }
