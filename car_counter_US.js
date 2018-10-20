@@ -1,6 +1,8 @@
 const five = require("johnny-five");
 const board = new five.Board();
 // const PubNub = require('pubnub');
+const config = require('dev.config');
+
 
 let frameDifference = 0;
 let lastFrame = 2000;
@@ -12,7 +14,7 @@ board.on("ready", function (){
         pin: 7
     });
 
-    ultrasonic.on("change", async function () {
+    ultrasonic.on("change", async function (){
         currentFrame = this.cm;
         if (this.cm < 50) {
           frameDifference = lastFrame - currentFrame;

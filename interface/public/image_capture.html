@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <video autoplay></video>
+        <br>
+        <button onclick="snapshot();">Click image</button>
+        <br>
+        <canvas id="myCanvas" width="400" height="350"></canvas>  
+        <script>
+        const constraints = {
+            video: {
+                facingMode:{exact:"environment"}
+            }
+        };
+
+        const video = document.querySelector('video');
+        const canvas = document.getElementById('myCanvas');
+        let ctx = canvas.getContext('2d');
+        
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {video.srcObject = stream});
+
+
+        function snapshot() {
+            // Draws current image from the video element into the canvas
+            ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+        }
+        </script>
+    </body>
+</html>
+
+
+
