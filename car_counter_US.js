@@ -2,7 +2,13 @@ const five = require("johnny-five");
 const board = new five.Board({
       port: "COM19"
 });
-// const PubNub = require('pubnub');
+const PubNub = require('pubnub');
+const dev_config = require('./dev.config');
+const pubnub = new PubNub(dev_config.pubnubSettings); // see pubnub documentations for the pubnub setup
+pubnub.subscribe({
+    channels: ['smart-traffic-change-signal']
+});
+
 
 let frameDifference = 0;
 let lastFrame = 2000;
@@ -39,3 +45,20 @@ board.on("ready", function (){
         lastFrame = this.cm;
     });
 })
+
+function sendToFrontend(color){
+    var publishConfig = {
+        channel: "smart-traffic-change-signal",
+        message: {
+            signal: color
+        }
+    }
+    pubnub.publish(publishConfig, function (status, response) {
+        console.log(response)
+    })
+}
+
+// setInterval(()=>{
+//     sendToFrontend('red')
+// },20000);
+

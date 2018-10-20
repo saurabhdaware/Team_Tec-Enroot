@@ -4,9 +4,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.5.min.js"></script>
     </head>
     <body>
-        <video autoplay></video>
+        <div class="w3-container">
+            <div class="w3-row">
+                <div class="w3-half">
+                    <video autoplay></video>
+                </div>
+                <div class="w3-half">
+                </div>
+
+            </div>
+        </div>
         <br>
         <button onclick="snapshot();">Click image</button>
         <br>
@@ -54,6 +64,22 @@
                 }
             }).then(console.log)
         }
+
+
+        var pubnub = new PubNub({
+            subscribe_key: 'sub-c-d4d3783e-c59b-11e8-a415-1a3a09e2960b',
+            publish_key: 'pub-c-7575af19-80c3-444b-a9d1-9af723c5cb1e'
+        }); // replace this line with your pubnub settings, You can find them on pubnub docs
+
+        pubnub.subscribe({
+            channels: ['smart-traffic-change-signal']
+        });
+
+        pubnub.addListener({
+            message: function (m) {
+                if(m.message.signal) console.log(m.message.signal);
+            }
+        })
         </script>
     </body>
 </html>
