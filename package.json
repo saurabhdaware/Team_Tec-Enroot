@@ -1,0 +1,22 @@
+{
+  "name": "team_tec-enroot",
+  "version": "1.0.0",
+  "description": "smart traffic signal",
+  "main": "car_counter_US.js",
+  "scripts": {
+    "test": "node car_counter_US.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saurabhdaware/Team_Tec-Enroot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saurabhdaware/Team_Tec-Enroot/issues"
+  },
+  "homepage": "https://github.com/saurabhdaware/Team_Tec-Enroot#readme",
+  "dependencies": {
+    "johnny-five": "^1.0.0"
+  }
+}
