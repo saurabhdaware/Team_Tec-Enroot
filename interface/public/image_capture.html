@@ -11,7 +11,7 @@
                 width:100%;
             }
             .video{
-                display:none;
+                /* display:none; */
                 width:90%;
                 height:auto;
                 margin:20px;
@@ -94,9 +94,9 @@
             </div>
         </div>
         <br>
-        <!-- <button onclick="snapshot();">Click image</button> -->
+        <button onclick="snapshot();">Click image</button>
         <br>
-        <canvas id="myCanvas" width="400" height="350"></canvas>  
+        <canvas id="myCanvas" width="400" height="300"></canvas>  
         <script src="captureImage.js"></script>
         <script>
         var pubnub = new PubNub({
@@ -109,27 +109,44 @@
             channels: ['smart-traffic-change-signal']
         });
         
+        let signalNum = document.getElementById('signalNumber');
+        signalNum.addEventListener('keyup',function(){
+            if(signalNum.value > 0 && signalNum.value < 5){
+                signalNum.style.backgroundColor = "#8f8";                
+            }else{
+                signalNum.style.backgroundColor = "#f88";
+            }
+        })
 
         pubnub.addListener({
             message: function (m) {
                 console.log(m.message);
-                if(m.message.signal == 'click-img') snapshot();
-                else if(m.message.signal) {
-                    if(m.message.signal == 'green'){
-                        changeSignal('green');
-                        setTimeout(()=>{
-                            console.log("turn red");
-                            changeSignal('red');
-                        },Number(m.message.time));
-                        let timer = setInterval(()=>{
-                            m.message.time-=1000;
-                            document.getElementById('timer').innerHTML = Math.floor(m.message.time/1000);
-                            if(m.message.time <=0){
-                                document.getElementById('timer').style.color = '#f00';
-                                clearInterval(timer)
-                            }
-                        },1000);
-                    }else changeSignal(m.message.signal);
+                if(m.message.carCount) console.log(Number(m.message.carCount.slice(1,-1)));
+                if(m.message.signalno == signalNum.value){
+                    if(m.message.signal == 'click-img'){
+                        snapshot()
+                        .then(console.log)
+                        .catch((err)=>{
+                            console.log("err:"+err);
+                        });
+                    } 
+                    else if(m.message.signal) {
+                        if(m.message.signal == 'green'){
+                            changeSignal('green');
+                            setTimeout(()=>{
+                                console.log("turn red");
+                                changeSignal('red');
+                            },Number(m.message.time));
+                            let timer = setInterval(()=>{
+                                m.message.time-=1000;
+                                document.getElementById('timer').innerHTML = Math.floor(m.message.time/1000);
+                                if(m.message.time <=0){
+                                    document.getElementById('timer').style.color = '#f00';
+                                    clearInterval(timer)
+                                }
+                            },1000);
+                        }else changeSignal(m.message.signal);
+                    }
                 }
             }
         })
@@ -146,14 +163,6 @@
                 }
             }
         }      
-        let signalNum = document.getElementById('signalNumber');
-        signalNum.addEventListener('keyup',function(){
-            if(signalNum.value > 0 && signalNum.value < 5){
-                signalNum.style.backgroundColor = "#8f8";                
-            }else{
-                signalNum.style.backgroundColor = "#f88";
-            }
-        })
         changeSignal('red');
         </script>
     </body>

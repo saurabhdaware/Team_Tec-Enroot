@@ -19,7 +19,7 @@ function snapshot() {
     ctx.drawImage(video, 0,0, canvas.width, canvas.height);
     let image64 = canvas.toDataURL('image/jpeg',1.0);
     let dataimage = dataURLtoFile(image64,'something.jpg');
-    uploadImage(dataimage);
+    return uploadImage(dataimage);
 }
 
 function dataURLtoFile(dataurl, filename) {
@@ -34,9 +34,9 @@ function dataURLtoFile(dataurl, filename) {
 function uploadImage(data){
     let formdata = new FormData();
     formdata.append('dataImage',data)
-    axios.post(`${node_server}/upload`,formdata,{
+    return axios.post(`${node_server}/upload`,formdata,{
         headers:{
             'Content-Type':'multipart/form-data'
         }
-    }).then(console.log)
+    })
 }
