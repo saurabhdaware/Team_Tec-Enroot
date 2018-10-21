@@ -28,24 +28,44 @@ board.on("ready", function (){
           	frameDifference = lastFrame - currentFrame;
           	if (frameDifference > 100) {
             		carsCount++;
+					// if(carsCount==9){
+						// sendToFrontend('click-img');
+						// }
+					// if (carsCount>10){
+						// sendToFrontend('green',signalno,5000);
+                // // setTimeout(function(){sendToFrontend('red',1);},1000);
+					// carsCount=0;
+        // }
             		console.log(carsCount);
           	}
         }
-	if(carsCount==9){
-		sendToFrontend('click-img');
-	}
-	if (carsCount>10){
-           	sendToFrontend('green',signalno,1000);
-                // setTimeout(function(){sendToFrontend('red',1);},1000);
-                carsCount=0;
-        }
         lastFrame = this.cm;
+		
     });
+	function control_signal(){
+		setTimeout(function(){sendToFrontend('click-img',signalno+1);},time-10000);
+		no_of_vehicle_ip=5;
+		
+		signalno=(signalno%4)+1;
+		
+		if(no_of_vehicle_ip<=5)
+		{
+			time=10;
+		}
+		else if(no_of_vehicle_ip<20)
+		{
+			time=20;
+		}
+		else{
+			time=30;
+		}
+		sendToFrontend('green',signalno,time);
+	}
 })
 
 function sendToFrontend(color,signalno=0,time=0){
     	console.log(time,signalno);
-	var publishConfig = {
+		var publishConfig = {
         channel: "smart-traffic-change-signal",
         message: {
             signal: color,
