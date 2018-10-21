@@ -62,39 +62,13 @@ board.on("ready", function (){
         }
         lastFrame = this.cm;
 		
-
-	});
-
-	function control_signal(){
-		sendToFrontend('click-img',signalno+1);
-		pubnub.addListener({
-			message: function(m){
-				if(m.message.carCount) {
-					no_of_vehicle_ip = m.message.carCount;
-
-					signalno=(signalno%4)+1;
-
-					if(no_of_vehicle_ip<=10)
-					{
-						time=10000;
-					}
-					else if(no_of_vehicle_ip<20)
-					{
-						time=20000;
-					}
-					else{
-						time=30000;
-					}
-
-					sendToFrontend('green',signalno,time);
-					control_signal();
-				};
-			}
-		})
-	}
-	control_signal();
-
     });
+	
+	
+	
+})
+control_signal();
+
 function sendToFrontend(color,signalno=0,time=0){
     	console.log(time,signalno);
 		var publishConfig = {
@@ -109,8 +83,3 @@ function sendToFrontend(color,signalno=0,time=0){
         console.log(response)
     })
 }
-
-// setInterval(()=>{
-//     sendToFrontend('red')
-// },20000);
-
