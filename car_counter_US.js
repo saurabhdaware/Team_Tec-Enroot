@@ -13,15 +13,36 @@ let lastFrame = 2000;
 let currentFrame = 0;
 let carsCount = 0;
 
-var signalno=1
+var signalno=1;
+var time=0;
+function control_signal(){
+		sendToFrontend('click-img',signalno+1);
+		no_of_vehicle_ip=carsCount;
+		carsCount=0;
+		signalno=(signalno%4)+1;
+		
+		if(no_of_vehicle_ip<=5)
+		{
+			time=10000;
+		}
+		else if(no_of_vehicle_ip<20)
+		{
+			time=20000;
+		}
+		else{
+			time=30000;
+		}
+		sendToFrontend('green',signalno,time);
+		setTimeout(control_signal,time);
+		
+	}
+
 board.on("ready", function (){
     let ultrasonic = new five.Proximity({
         controller: "HCSR04",
         pin: 7
     });
 
-	signalstatus='red';
-	sendToFrontend(signalstatus);
     	ultrasonic.on("change", async function () {
         currentFrame = this.cm;
         if (this.cm < 50) {
@@ -41,8 +62,9 @@ board.on("ready", function (){
         }
         lastFrame = this.cm;
 		
+
 	});
-	
+
 	function control_signal(){
 		sendToFrontend('click-img',signalno+1);
 		pubnub.addListener({
@@ -72,8 +94,7 @@ board.on("ready", function (){
 	}
 	control_signal();
 
-})
-
+    });
 function sendToFrontend(color,signalno=0,time=0){
     	console.log(time,signalno);
 		var publishConfig = {
